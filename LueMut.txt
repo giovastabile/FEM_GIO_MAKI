@@ -1,0 +1,10 @@
+%Heilurin ratkaisu kolmiulotteisena
+%käyttäen palkkielementtiä ja pistemassaa solmussa 2. Hessu 21.4.05
+
+Kopioi tässä hakemistossa olevat Matlab funktiot
+johonkin hakemistoon ja aseta se Matlabin työhakemistoksi.
+
+Tämän jälkeen heiluri integroidaan ajamalla skriptitiedosto:
+
+
+DP3DFEM
