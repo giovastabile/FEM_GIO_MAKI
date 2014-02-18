@@ -38,7 +38,7 @@ FEM.RC(1).J=GetBeamJ(Roo,FEM.RC(1).Iy,FEM.RC(1).Iz);    % Inertia tensor
 %% Fem nodes coordinates
 
 % Number of Elements and Number of Nodes
-FEM.NumEle=5;                                       
+FEM.NumEle=5;
 FEM.NumNodes=6;
 
 %% Model parameters
@@ -86,25 +86,28 @@ end
 %}
 %% Node coordinates
 
-for i=1:FEM.NumNodes
-    
-    Node(i).x=0+(i-1)*Ls/(FEM.NumNodes-1);
-    Node(i).y=0;
-    Node(i).z=0;
-end
+% Generate the mesh of the undeformed beam
+X= [0,0,0;Ls,0,0];   
+[Node] = Beam_member(X,FEM.NumEle);
+
+% for i=1:FEM.NumNodes
+%     Node(i).x=0+(i-1)*Ls/(FEM.NumNodes-1);
+%     Node(i).y=0;
+%     Node(i).z=0;
+% end
 
 % Node(1).x=0;
 % Node(1).y=0;
 % Node(1).z=0;
-% 
+%
 % Node(2).x=Ls/3;
 % Node(2).y=0;
 % Node(2).z=0;
-% 
+%
 % Node(3).x=2*Ls/3;
 % Node(3).y=0;
 % Node(3).z=0;
-% 
+%
 % Node(4).x=Ls;
 % Node(4).y=0;
 % Node(4).z=0;
@@ -145,19 +148,18 @@ end
 %   FEM.ELE(2).Rref=eye(3);
 %% Set external loads
 
-% Insert external loads FEM.Loads(node,:)=[N Ty Tz Mt My Mz] 
+% Insert external loads FEM.Loads(node,:)=[N Ty Tz Mt My Mz]
 
 FEM.Loads=zeros(FEM.NumNodes,6);
 FEM.Loads(6,:)=[0 0 0 0 0 1];
 FEM.EXloads=zeros(36,80001);
 
 
-
 for t=1:80001;
-for node=1:FEM.NumNodes
-    ID_glob=FEM.ID(node,:)';
-    FEM.EXloads(ID_glob,t)=65450/80001*t*FEM.Loads(node,:);
-end
+    for node=1:FEM.NumNodes
+        ID_glob=FEM.ID(node,:)';
+        FEM.EXloads(ID_glob,t)=65450/80001*t*FEM.Loads(node,:);
+    end
 end
 
 
@@ -171,24 +173,20 @@ end
 FEM.Costraints=ones(FEM.NumNodes,6);
 FEM.Costraints(1,:)=[0 0 0 0 0 0]; % Node 1 is blocked
 
-
-
-
 %%
 
 for i=1:FEM.NumNodes
     FEM.Kahveli(i).R=eye(3);
 end
 
-% Time Parameters
+%% Time Parameters
 
 t0=0;                       % Initial time
 t_max=400;                  % Final time
 h=.005;                     % Time increment
 tspan=[t0;t_max;h];         % Paramaters for time vector
 
-
-% Initial conditions
+%% Initial conditions
 
 [y0,v0,l0]=GetInitialState(0);
 

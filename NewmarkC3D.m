@@ -43,8 +43,8 @@ false = 0;              % logical variable
 true = ~false;          % logical variable
 mod_Newton = true;      % modified Newton-Raphson-iteration
 MAX_ITERA=20000;          % max number of iteration per time step
-epsilon=1e-3;           % residual norm convergence criterion
-eta=1e-6;               % constraint convergence treshold
+epsilon=1e-2;           % residual norm convergence criterion
+eta=1e-3;               % constraint convergence treshold
 
 % Newmark parameters
 t = tspan(1);           % initial time
@@ -85,12 +85,12 @@ lout(Counter,:) = l0.';
 feval(residual,t,y0,v0,v0*0,l0,0);
 %%%
 
-% for i=1:FEM.NumEle;
-%     for j=1:FEM.ELE(i).NumNodes;
-%         node=FEM.ELE(1,i).Node(j);
-%         coo(node,:)=FEM.ELE(1,i).X((1+3*(j-1)):(3+3*(j-1)));
-%     end
-% end
+for i=1:FEM.NumEle;
+    for j=1:FEM.ELE(i).NumNodes;
+        node=FEM.ELE(1,i).Node(j);
+        coo(node,:)=FEM.ELE(1,i).X((1+3*(j-1)):(3+3*(j-1)));
+    end
+end
 
 
 % THE MAIN LOOP ***********************************************************************
@@ -155,7 +155,7 @@ while ~done
         
         % rnorm = norm(r, inf);
         % psiinorm = norm(Psii, inf);
-        rnorm = norm(r);
+        rnorm = norm(r)
         psiinorm = norm(Psii);
         
         % update stage values
