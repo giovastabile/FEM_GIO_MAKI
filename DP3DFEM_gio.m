@@ -152,13 +152,13 @@ end
 
 FEM.Loads=zeros(FEM.NumNodes,6);
 FEM.Loads(6,:)=[0 0 0 0 0 1];
-FEM.EXloads=zeros(36,80001);
+FEM.EXloads=zeros(36,801);
 
 
-for t=1:80001;
+for t=1:801;
     for node=1:FEM.NumNodes
         ID_glob=FEM.ID(node,:)';
-        FEM.EXloads(ID_glob,t)=65450/80001*t*FEM.Loads(node,:);
+        FEM.EXloads(ID_glob,t)=65450/801*t*FEM.Loads(node,:);
     end
 end
 
@@ -179,11 +179,15 @@ for i=1:FEM.NumNodes
     FEM.Kahveli(i).R=eye(3);
 end
 
+%% Load steps for static analysis
+n_load_steps=100;
+
+
 %% Time Parameters
 
 t0=0;                       % Initial time
-t_max=400;                  % Final time
-h=.005;                     % Time increment
+t_max=4;                  % Final time
+h=0.05;                     % Time increment
 tspan=[t0;t_max;h];         % Paramaters for time vector
 
 %% Initial conditions
@@ -196,7 +200,7 @@ tspan=[t0;t_max;h];         % Paramaters for time vector
 
 %% Solve Using Newmark method
 
-[tout,yout,vout,rout,lout,stats] = NewmarkC3D('Residual_UL','TangentMatrices','BallConst',tspan,y0,v0,l0);
+[y2] = NewmarkC3D('Residual_UL','TangentMatrices','BallConst',tspan,y0,v0,l0);
 
 % plot(tout,yout(:,62))
 
